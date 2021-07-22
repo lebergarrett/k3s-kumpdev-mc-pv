@@ -25,17 +25,17 @@ resource "kubernetes_persistent_volume_claim" "_" {
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "fabric_mods" {
+resource "kubernetes_persistent_volume_claim" "luckperms_mariadb" {
   metadata {
-    name      = "fabric-mods"
+    name      = "luckperms-mariadb"
     namespace = kubernetes_namespace._.metadata.0.name
   }
   spec {
-    access_modes       = ["ReadWriteMany"]
+    access_modes       = ["ReadWriteOnce"]
     storage_class_name = "microk8s-hostpath"
     resources {
       requests = {
-        storage = each.value
+        storage = "500M"
       }
     }
   }
