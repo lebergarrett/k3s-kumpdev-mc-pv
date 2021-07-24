@@ -1,4 +1,4 @@
-server_name = "dev-mc-kumpdev"
+server_name = "prod-mc-kumpdev"
 
 server_list = {
 #  lobby           = "500M"

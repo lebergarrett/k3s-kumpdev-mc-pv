@@ -1,3 +1,7 @@
 .terraform/*
 .terraform.lock.hcl
 terraform.tfstate*
+
+# File that stores aws creds for velero service account
+credentials-velero
+velero-helm-values.yaml

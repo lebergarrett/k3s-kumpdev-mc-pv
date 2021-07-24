@@ -1,0 +1,24 @@
+---
+- hosts: all
+  name: backup-cronjobs
+  tasks:
+    - name: Copy backup script to server
+      copy:
+        src: pvc_backup.sh
+        dest: /home/lab/scripts
+        owner: lab
+        group: lab
+        mode: 0755
+    - name: Set up cronjob for server {{ item }}
+      cron:
+        name: "{{ item }}"
+        minute: "0"
+        hour: "04"
+        job: /home/lab/pvc_backup.sh {{ item }} {{ server_namespace }}
+        state: "{{ state }}"
+      with_items: "{{ servers }}"
+    - name: Remove script from server if being destroyed, else leave alone
+      file:
+        path: /home/lab/scripts/pvc_backup.sh
+        state: "{{ state }}"
+      when: state == "absent"
