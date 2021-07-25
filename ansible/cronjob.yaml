@@ -14,7 +14,7 @@
         name: "{{ item }}"
         minute: "0"
         hour: "04"
-        job: /home/lab/pvc_backup.sh {{ item }} {{ server_namespace }}
+        job: /bin/bash /home/lab/scripts/pvc_backup.sh {{ item }} {{ server_namespace }}
         state: "{{ state }}"
       with_items: "{{ servers }}"
     - name: Remove script from server if being destroyed, else leave alone
