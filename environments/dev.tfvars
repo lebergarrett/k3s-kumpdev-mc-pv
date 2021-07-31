@@ -5,4 +5,5 @@ server_list = {
   creative        = "2G"
   fabric          = "10G"
   fabric-creative = "2G"
+  revelation       = "2G"
 }
