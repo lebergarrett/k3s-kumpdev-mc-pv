@@ -32,6 +32,7 @@ resource "kubernetes_persistent_volume_claim" "_" {
 }
 
 resource "kubernetes_persistent_volume_claim" "luckperms_mariadb" {
+  count = var.luckperms_enabled == true ? 1 : 0
   metadata {
     name      = "luckperms-mariadb"
     namespace = kubernetes_namespace._.metadata.0.name
@@ -67,8 +68,8 @@ locals {
   backup_paths = concat([
     # MC servers
     for server, volsize in var.server_list : "\"${var.server_name}-${server}-pvc-${kubernetes_persistent_volume_claim._[server].metadata.0.uid}\""
-    ], [
+    ], var.luckperms_enabled == true ? [
     # Luckperms mariadb
-    "\"${var.server_name}-${kubernetes_persistent_volume_claim.luckperms_mariadb.metadata.0.name}-pvc-${kubernetes_persistent_volume_claim.luckperms_mariadb.metadata.0.uid}\""
-  ])
+    "\"${var.server_name}-${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.name}-pvc-${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.uid}\""
+  ] : [])
 }
