@@ -1,4 +1,4 @@
-server_name = "dev-mc-kumpdev"
+server_name = "dev-mc"
 
 luckperms_enabled = true
 

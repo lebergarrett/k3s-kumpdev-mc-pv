@@ -22,7 +22,7 @@ resource "kubernetes_persistent_volume_claim" "_" {
   }
   spec {
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "microk8s-hostpath"
+    storage_class_name = "local-path"
     resources {
       requests = {
         storage = each.value
@@ -39,7 +39,7 @@ resource "kubernetes_persistent_volume_claim" "luckperms_mariadb" {
   }
   spec {
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "microk8s-hostpath"
+    storage_class_name = "local-path"
     resources {
       requests = {
         storage = "500M"
@@ -56,11 +56,11 @@ resource "null_resource" "backup_cronjob" {
 
   provisioner "local-exec" {
     when    = create
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.1.41, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"present\"}'"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.0.81, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"present\"}'"
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.1.41, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"absent\"}'"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.0.81, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"absent\"}'"
   }
 }
 

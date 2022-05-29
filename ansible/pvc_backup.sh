@@ -6,7 +6,7 @@
 #
 ####################################
 SRCDIR=$1
-cd /var/snap/microk8s/common/default-storage/
+cd /var/lib/rancher/k3s/storage/
 
 server_namespace=$2
 
