@@ -1,4 +1,4 @@
-server_name = "e2e-mc-kumpdev"
+namespace = "e2e-mc"
 
 luckperms_enabled = false
 

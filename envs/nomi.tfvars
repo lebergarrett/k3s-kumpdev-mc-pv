@@ -1,4 +1,4 @@
-server_name = "nomi"
+namespace = "nomi-mc"
 
 luckperms_enabled = false
 

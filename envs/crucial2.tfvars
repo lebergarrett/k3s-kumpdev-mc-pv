@@ -1,4 +1,4 @@
-server_name = "crucial2"
+namespace = "crucial2-mc"
 
 luckperms_enabled = false
 
