@@ -8,4 +8,4 @@ The k8s host will either need to have aws cli installed and configured, or comme
 
 ## Issues with ansible playbook
 
-If there are any issues running the playbook portion, you can destroy the null resource used for it by running `terraform destroy -target null_resource.backup_cronjob --var-file=$VAR_FILE` and then reapplying as necessary.
+If there are any issues running the playbook portion, you can destroy the null resource used for it by running `terraform destroy -target null_resource.backup_cronjob --var-file=$VAR_FILE` and then reapply as necessary.
