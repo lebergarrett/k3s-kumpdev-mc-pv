@@ -1,4 +1,4 @@
-server_name = "enigmatica6-mc"
+namespace = "enigmatica6-mc"
 
 luckperms_enabled = false
 

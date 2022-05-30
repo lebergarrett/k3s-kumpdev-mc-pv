@@ -1,4 +1,4 @@
-server_name = "aof3-mc-kumpdev"
+namespace = "aof3-mc"
 
 luckperms_enabled = false
 

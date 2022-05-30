@@ -1,4 +1,4 @@
-server_name = "prod-mc-kumpdev"
+namespace = "prod-mc"
 
 luckperms_enabled = true
 

@@ -10,7 +10,7 @@ provider "helm" {
 
 resource "kubernetes_namespace" "_" {
   metadata {
-    name = var.server_name
+    name = var.namespace
   }
 }
 
@@ -22,7 +22,7 @@ resource "kubernetes_persistent_volume_claim" "_" {
   }
   spec {
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "microk8s-hostpath"
+    storage_class_name = "local-path"
     resources {
       requests = {
         storage = each.value
@@ -39,7 +39,7 @@ resource "kubernetes_persistent_volume_claim" "luckperms_mariadb" {
   }
   spec {
     access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "microk8s-hostpath"
+    storage_class_name = "local-path"
     resources {
       requests = {
         storage = "500M"
@@ -51,25 +51,25 @@ resource "kubernetes_persistent_volume_claim" "luckperms_mariadb" {
 resource "null_resource" "backup_cronjob" {
   triggers = {
     backup_paths = join(", ", local.backup_paths)
-    server_name  = var.server_name
+    namespace    = var.namespace
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.1.41, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"present\"}'"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.0.81, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.namespace}\", \"state\": \"present\"}'"
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.1.41, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.server_name}\", \"state\": \"absent\"}'"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u lab -i 192.168.0.81, ansible/cronjob.yaml --extra-vars '{\"servers\": [${self.triggers.backup_paths}], \"server_namespace\": \"${self.triggers.namespace}\", \"state\": \"absent\"}'"
   }
 }
 
 locals {
   backup_paths = concat([
     # MC servers
-    for server, volsize in var.server_list : "\"${var.server_name}-${server}-pvc-${kubernetes_persistent_volume_claim._[server].metadata.0.uid}\""
+    for server, volsize in var.server_list : "\"pvc-${kubernetes_persistent_volume_claim._[server].metadata.0.uid}_${var.namespace}_${server}\""
     ], var.luckperms_enabled == true ? [
     # Luckperms mariadb
-    "\"${var.server_name}-${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.name}-pvc-${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.uid}\""
+    "\"pvc-${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.uid}_${var.namespace}_${kubernetes_persistent_volume_claim.luckperms_mariadb[0].metadata.0.name}\""
   ] : [])
 }

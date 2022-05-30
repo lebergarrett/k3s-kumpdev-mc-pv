@@ -1,6 +1,6 @@
 variable "luckperms_enabled" {
   description = "If a luckperms database will need to be created, currently only created when a paper server is stood up"
-  type = bool
+  type        = bool
 }
 
 variable "server_list" {
@@ -8,7 +8,7 @@ variable "server_list" {
   type        = map(string)
 }
 
-variable "server_name" {
+variable "namespace" {
   description = "Name of server/network, used in various locations"
   type        = string
 }
